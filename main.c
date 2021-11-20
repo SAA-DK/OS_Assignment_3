@@ -22,7 +22,9 @@
 void process1(int person, int die1, int die2);
 void process2(int person, int die1, int die2);
 void printResult(int person, int die1, int die2);
-int nextPlayer(int person);
+int nextPlayer(int person); //OBS! Tager kun højde for én tur
+
+int i;  //Denne skal slettes igen
 
 int turn; //OBS! Tager kun højde for én tur
 int die1; die2; die3; die4;
@@ -31,7 +33,8 @@ int main() {
     int numGen1 = ((rand() % 8) + 1); //Initierer første spiller
     int numGen2 = ((rand() % 8) + 1); //Initierer anden spiller
 
-    process1(numGen1, die1, die2); //Starter
+    //Starter spillene
+    process1(numGen1, die1, die2);
     process2(numGen2, die3, die4);
 
 }
@@ -45,13 +48,14 @@ void process1 (int person, int die1, int die2) {
     die2 = ((rand() % 6) + 1);
     printResult(person, die1, die2);
 
-    /*while (true) {
+    /*while (true) {        //Peterson's Algortihm for Two Processes, week 8 slide 10
         flag [1] = true;
         turn = 1;
         while (flag[0] && turn == 1) {}
         /*Critical section -> give away dice*//*
         flag [1] = false;
     }*/
+
         //Critical section:
     nextPlayer(person); //What to do with this person??
 }
@@ -61,7 +65,7 @@ void process2 (int person, int die1, int die2) {
     die2 = ((rand() % 6) + 1);
     printResult(person, die1, die2);
 
-    /*while (true) {
+    /*while (true) {        //Peterson's Algortihm for Two Processes, week 8 slide 10
         flag [0] = true;
         turn = 0;
         while (flag[1] && turn == 0) {}
@@ -70,7 +74,7 @@ void process2 (int person, int die1, int die2) {
     }*/
 }
 
-int nextPlayer(int person){
+int nextPlayer(int person){  //OBS! Tager kun højde for én tur
     while (1) {
         int numGen1 = ((rand() % 8) + 1);
             if (numGen1 != person) {
