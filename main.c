@@ -24,8 +24,6 @@ void process2(int person, int die1, int die2);
 void printResult(int person, int die1, int die2);
 int nextPlayer(int person); //OBS! Tager kun højde for én tur
 
-int i;  //Denne skal slettes igen
-
 int turn; //OBS! Tager kun højde for én tur
 int die1; die2; die3; die4;
 
@@ -34,8 +32,15 @@ int main() {
     int numGen2 = ((rand() % 8) + 1); //Initierer anden spiller
 
     //Starter spillene
-    process1(numGen1, die1, die2);
-    process2(numGen2, die3, die4);
+    //process1(numGen1, die1, die2);
+    //process2(numGen2, die3, die4);
+    playing(numGen1, numGen2, die1, die2, die3, die4);
+
+    for(int i = 0; i < 10; i++){
+        die1 = ((rand() % 6) + 1);
+        die2 = ((rand() % 6) + 1);
+        printf("Die 1 = %d and Die 2 = %d \n", die1, die2);
+    }
 
 }
 
