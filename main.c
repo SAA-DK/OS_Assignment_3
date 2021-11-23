@@ -9,7 +9,7 @@
  * En person må kun holde ét sæt terninger ad gangen.
  * Når en person har slået, gives terningerne videre til en tilfældig person.
  * En person må ikke slå 2 gange i træk, med det samme sæt terninger.
- * Spillet slutter når en person har slået dobbeltsekser med begge sæt terninger.
+ * Spillet slutter når en person har slået dobbeltsekser tre gange.
  * Ved tilfælde af en deadlock, hvor terningerne bliver splittet op, så der sidder mere en to personer med terninger, er det en fejl, og spillet starter forfra.
  * Det sæt terninger man lige har slået med, kan ikke komme tilbage til en selv, før at mindst en anden person har slået med sættet.
  *
@@ -19,21 +19,20 @@
  * @return
  */
 
-void process1(int person, int die1, int die2);
-void process2(int person, int die1, int die2);
+void playing(int person1, person2, die1, die2, die3, die4);
 void printResult(int person, int die1, int die2);
-int nextPlayer(int person); //OBS! Tager kun højde for én tur
+int nextPlayer(int currentPlayer, otherPlayer);
+int throwDie(int die);
+int chooseRandomPlayer (int player);
 
-int turn; //OBS! Tager kun højde for én tur
+int turn;
 int die1; die2; die3; die4;
 
 int main() {
-    int numGen1 = ((rand() % 8) + 1); //Initierer første spiller
-    int numGen2 = ((rand() % 8) + 1); //Initierer anden spiller
+    int numGen1 = chooseRandomPlayer(0); //Chooses first player A-H
+    int numGen2 = chooseRandomPlayer(0); //Chooses second player
 
-    //Starter spillene
-    //process1(numGen1, die1, die2);
-    //process2(numGen2, die3, die4);
+    //Starts playing
     playing(numGen1, numGen2, die1, die2, die3, die4);
 
     for(int i = 0; i < 10; i++){
@@ -41,60 +40,94 @@ int main() {
         die2 = ((rand() % 6) + 1);
         printf("Die 1 = %d and Die 2 = %d \n", die1, die2);
     }
-
 }
 
-
-//Peterson's Algortihm for Two Processes
+//Peterson's Algorithm for Two Processes
 bool flag [2];
 int turn;
-void process1 (int person, int die1, int die2) {
-    die1 = ((rand() % 6) + 1);
-    die2 = ((rand() % 6) + 1);
-    printResult(person, die1, die2);
 
-    /*while (true) {        //Peterson's Algortihm for Two Processes, week 8 slide 10
-        flag [1] = true;
-        turn = 1;
-        while (flag[0] && turn == 1) {}
-        /*Critical section -> give away dice*//*
-        flag [1] = false;
-    }*/
-
-        //Critical section:
-    nextPlayer(person); //What to do with this person??
-}
-
-void process2 (int person, int die1, int die2) {
-    die1 = ((rand() % 6) + 1);
-    die2 = ((rand() % 6) + 1);
-    printResult(person, die1, die2);
-
-    /*while (true) {        //Peterson's Algortihm for Two Processes, week 8 slide 10
-        flag [0] = true;
-        turn = 0;
-        while (flag[1] && turn == 0) {}
-        /*Critical section -> give away dice*/
-    /*flag [0] = false;
-    }*/
-}
-
-int nextPlayer(int person){  //OBS! Tager kun højde for én tur
+//Game ongoing
+void playing(int player1, player2, die1, die2, die3, die4) {
+    //Game1 - current player of this game is called player1
+    //Kig denne del igennem igen. Skal finde en måde at fjerne break-statement
     while (1) {
-        int numGen1 = ((rand() % 8) + 1);
-            if (numGen1 != person) {
-                turn = person;
-                return turn;
-            }
+        die1 = throwDie(die1);
+        die2 = throwDie(die2);
+        printResult(player1, die1, die2);
+
+        while (1) {
+            flag[0] = true;
+            turn = 1;
+            while (flag[1] && turn == 1) { /*do nothing*/ }
+            //Critical section -> give away dice
+            nextPlayer(player1, player2); //Choose next player
+
+            flag[0] = false;
+            break;
+        }
+        break;
+    }
+
+    //Game2  - current player of this game is called player2
+    while (1) {
+        die3 = throwDie(die3);
+        die4 = throwDie(die4);
+        printResult(player2, die1, die2);
+
+        while (1) {
+            flag[1] = true;
+            turn = 0;
+            while (flag[0] && turn == 0) { /*do nothing*/ }
+            //Critical section -> give away dice
+            nextPlayer(player2, player1); //Choose next player
+
+            flag[1] = false;
+            break;
+        }
+        break;
     }
 }
 
+int nextPlayer (int currentPlayer, otherPlayer){  //OBS! Vi har ikke taget højde for at otherPlayer ændrer sig mens nextPlayer() kører
+    int numGen = chooseRandomPlayer(currentPlayer);
+    while (1) {
+        if (numGen != currentPlayer && numGen != otherPlayer) {
+            turn = numGen;
+            return turn;
+        } else {
+            numGen = chooseRandomPlayer(currentPlayer);
+        }
+    }
+}
+int chooseRandomPlayer (int player) {
+    player = ((rand() % 8) + 1);
+    return player;
+}
+
+int throwDie (int die) {
+    die = ((rand() % 6) + 1);
+    return die;
+}
+
+int count1= 0, count2= 0, count3= 0, count4= 0, count5= 0, count6 = 0, count7 = 0, count8 = 0; //Double sixes count to end game. One for each player
 void printResult (int person, int die1, int die2) {
     switch (person) {
         case 1:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count1++;
+            } if (count1 == 3) { //Game won
+                printf("Person A rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person A rolled: %d and %d \n", die1, die2);
             break;
         case 2:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count2++;
+            } if (count2 == 3) { //Game won
+                printf("Person B rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person B rolled: %d and %d \n", die1, die2);
             break;
         case 3:
