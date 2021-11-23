@@ -131,21 +131,63 @@ void printResult (int person, int die1, int die2) {
             printf("Person B rolled: %d and %d \n", die1, die2);
             break;
         case 3:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count3++;
+            }
+            if (count3 == 3) { //Game won
+                printf("Person C rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person C rolled: %d and %d \n", die1, die2);
             break;
         case 4:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count4++;
+            }
+            if (count4 == 3) { //Game won
+                printf("Person D rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person D rolled: %d and %d \n", die1, die2);
             break;
         case 5:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count5++;
+            }
+            if (count5 == 3) { //Game won
+                printf("Person E rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person E rolled: %d and %d \n", die1, die2);
             break;
         case 6:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count6++;
+            }
+            if (count6 == 3) { //Game won
+                printf("Person F rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person F rolled: %d and %d \n", die1, die2);
             break;
         case 7:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count7++;
+            }
+            if (count7 == 3) { //Game won
+                printf("Person G rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person G rolled: %d and %d \n", die1, die2);
             break;
         case 8:
+            if (die1 == die2 && die1 == 6) { // Double sixes instance
+                count8++;
+            }
+            if (count8 == 3) { //Game won
+                printf("Person H rolled %d and %d three times, and has won the game!\n", die1, die2);
+                exit(1);
+            }
             printf("Person H rolled: %d and %d \n", die1, die2);
             break;
         default:
