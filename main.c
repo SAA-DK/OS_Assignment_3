@@ -88,6 +88,8 @@ void playing(int player1, player2, die1, die2, die3, die4) {
     }
 }
 
+int i;  //Skal slettes igen.
+
 int nextPlayer (int currentPlayer, otherPlayer){  //OBS! Vi har ikke taget højde for at otherPlayer ændrer sig mens nextPlayer() kører
     int numGen = chooseRandomPlayer(currentPlayer);
     while (1) {
