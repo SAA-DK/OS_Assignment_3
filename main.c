@@ -35,11 +35,11 @@ int main() {
     //Starts playing
     playing(numGen1, numGen2, die1, die2, die3, die4);
 
-    for(int i = 0; i < 10; i++){
+    /*for(int i = 0; i < 10; i++){
         die1 = ((rand() % 6) + 1);
         die2 = ((rand() % 6) + 1);
         printf("Die 1 = %d and Die 2 = %d \n", die1, die2);
-    }
+    }*/
 }
 
 //Peterson's Algorithm for Two Processes
@@ -88,9 +88,7 @@ void playing(int player1, player2, die1, die2, die3, die4) {
     }
 }
 
-int i;  //Skal slettes igen.
-
-int nextPlayer (int currentPlayer, otherPlayer){  //OBS! Vi har ikke taget højde for at otherPlayer ændrer sig mens nextPlayer() kører
+int nextPlayer (int currentPlayer){  //OBS! Vi har ikke taget højde for at otherPlayer ændrer sig mens nextPlayer() kører
     int numGen = chooseRandomPlayer(currentPlayer);
     while (1) {
         if (numGen != currentPlayer && numGen != otherPlayer) {
