@@ -42,48 +42,38 @@ int main() {
     }*/
 }
 
-//Peterson's Algorithm for Two Processes
-bool flag [2];
-int turn;
+void process1(int player1, int die1, int die2) {
+    die1 = throwDie(die1);
+    die2 = throwDie(die2);
+    printResult(player1, die1, die2);
 
-//Game ongoing
-void playing(int player1, player2, die1, die2, die3, die4) {
-    //Game1 - current player of this game is called player1
-    //Kig denne del igennem igen. Skal finde en måde at fjerne break-statement
     while (1) {
-        die1 = throwDie(die1);
-        die2 = throwDie(die2);
-        printResult(player1, die1, die2);
+        flag[0] = true;
+        turn = 1;
+        while (flag[1] && turn == 1) { /*do nothing, since other process is running*/ }
+        //Critical section -> give away dice
+        nextPlayer(player1); //Choose next player
 
-        while (1) {
-            flag[0] = true;
-            turn = 1;
-            while (flag[1] && turn == 1) { /*do nothing*/ }
-            //Critical section -> give away dice
-            nextPlayer(player1, player2); //Choose next player
-
-            flag[0] = false;
-            break;
-        }
-        break;
+        flag[0] = false; //Process done
+        return;
     }
+}
 
-    //Game2  - current player of this game is called player2
+//Game2  - current player of this game is called player2
+void process2(int player2, int die3, int die4) {
+    die3 = throwDie(die3);
+    die4 = throwDie(die4);
+    printResult(player2, die3, die4);
+
     while (1) {
-        die3 = throwDie(die3);
-        die4 = throwDie(die4);
-        printResult(player2, die1, die2);
+        flag[1] = true;
+        turn = 0;
+        while (flag[0] && turn == 0) { /*do nothing*/ }
 
-        while (1) {
-            flag[1] = true;
-            turn = 0;
-            while (flag[0] && turn == 0) { /*do nothing*/ }
-            //Critical section -> give away dice
-            nextPlayer(player2, player1); //Choose next player
+        //Critical section -> give away dice
+        nextPlayer(player2); //Choose next player
 
-            flag[1] = false;
-            break;
-        }
+        flag[1] = false;
         break;
     }
 }
@@ -96,10 +86,12 @@ int nextPlayer (int currentPlayer){  //OBS! Vi har ikke taget højde for at othe
             return turn;
         } else {
             numGen = chooseRandomPlayer(currentPlayer);
+            printf("PRINT ME!!! \n");
         }
     }
 }
-int chooseRandomPlayer (int player) {
+
+int chooseRandomPlayer(int player) {
     player = ((rand() % 8) + 1);
     return player;
 }
