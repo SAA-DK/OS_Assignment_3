@@ -30,47 +30,50 @@ int count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, coun
 
 //Mutex lock
 pthread_mutex_t mutex;
-
-void* diceGame(int player1) {
+int player = 0;
+void* diceGame() {
+    if (!player) {
+        player = chooseRandomPlayer(0); //Chooses first player A-H
+    }
     die1 = throwDie(die1);
     die2 = throwDie(die2);
-    printResult(player1, die1, die2);
+    printResult(player, die1, die2);
 
     //Mutex lock before choosing next player from the shared memory pool
     pthread_mutex_lock(&mutex);
     //Critical section -> give away dice
-    nextPlayer(player1); //Choose next player
+    nextPlayer(player); //Choose next player
     pthread_mutex_unlock(&mutex);
 }
 
 int main() {
-    int numGen1 = chooseRandomPlayer(0); //Chooses first player A-H
-    int numGen2 = chooseRandomPlayer(0); //Chooses second player A-H
-
-
     pthread_t game1, game2; //two thread structs created
     pthread_mutex_init(&mutex, NULL); //Initialize mutex
-    if (pthread_create(&game1, NULL, &diceGame, NULL)) { //Create thread 1 for diceGame process
-        return 1;
+
+    while (count1 < 4) {
+        if (pthread_create(&game1, NULL, &diceGame, NULL)) { //Create thread 1 for diceGame process
+                return 1;
+            }
+
+            if (pthread_create(&game2, NULL, &diceGame, NULL)) { //Create thread 2 for diceGame process
+                return 2;
+            }
+
+            if (pthread_join(game1, NULL)) { //First thread returns
+                return 3;
+            }
+
+            if (pthread_join(game2, NULL)) { //Second thread returns
+                return 4;
+            }
     }
 
-    if (pthread_create(&game2, NULL, &diceGame, NULL)) { //Create thread 2 for diceGame process
-        return 2;
-    }
-
-    if (pthread_join(game1, NULL)) { //First thread returns
-        return 3;
-    }
-
-    if (pthread_join(game2, NULL)) { //Second thread returns
-        return 4;
-    }
 
     pthread_mutex_destroy(&mutex); //Destroy mutex
 }
 
 int nextPlayer(int currentPlayer) {
-    int numGen = chooseRandomPlayer(currentPlayer);
+    int numGen = chooseRandomPlayer(0);
 
     while (1) {
         if (numGen != currentPlayer) {
