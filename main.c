@@ -19,16 +19,30 @@
  * @return
  */
 
-void playing(int person1, person2, die1, die2, die3, die4);
+void playing(int person1, int person2, int die1, int die2, int die3, int die4);
+
+void process1(int player1, int die1, int die2);
+
+void process2(int player1, int die1, int die2);
+
 void printResult(int person, int die1, int die2);
 
 int nextPlayer(int currentPlayer);
 
 int throwDie(int die);
-int chooseRandomPlayer (int player);
+
+int chooseRandomPlayer(int player);
 
 int turn;
-int die1; die2; die3; die4;
+int die1;
+int die2;
+int die3;
+int die4;
+int count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, count7 = 0, count8 = 0; //Double sixes count to end game. One for each player
+
+//Peterson's Algorithm for Two Processes
+bool flag[2];
+int turn;
 
 int main() {
     int numGen1 = chooseRandomPlayer(0); //Chooses first player A-H
@@ -68,8 +82,9 @@ void diceGame(int player1, int die1, int die2) {
     }
 }
 
-int nextPlayer (int currentPlayer){  //OBS! Vi har ikke taget højde for at otherPlayer ændrer sig mens nextPlayer() kører
+int nextPlayer(int currentPlayer) {
     int numGen = chooseRandomPlayer(currentPlayer);
+    //int numGen = ((rand() % 8) + 1);
     while (1) {
         if (numGen != currentPlayer) {
             printf("BLIVER JEG PRINTET!!! \n");
@@ -86,7 +101,7 @@ int chooseRandomPlayer(int player) {
     return player;
 }
 
-int throwDie (int die) {
+int throwDie(int die) {
     die = ((rand() % 6) + 1);
     return die;
 }
@@ -96,7 +111,8 @@ void printResult(int person, int die1, int die2) {
         case 1:
             if (die1 == die2 && die1 == 6) { // Double sixes instance
                 count1++;
-            } if (count1 == 3) { //Game won
+            }
+            if (count1 == 3) { //Game won
                 printf("Person A rolled %d and %d three times, and has won the game!\n", die1, die2);
                 exit(1);
             }
@@ -105,7 +121,8 @@ void printResult(int person, int die1, int die2) {
         case 2:
             if (die1 == die2 && die1 == 6) { // Double sixes instance
                 count2++;
-            } if (count2 == 3) { //Game won
+            }
+            if (count2 == 3) { //Game won
                 printf("Person B rolled %d and %d three times, and has won the game!\n", die1, die2);
                 exit(1);
             }
