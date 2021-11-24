@@ -65,23 +65,6 @@ int main() {
     }*/
 }
 
-void diceGame(int player1, int die1, int die2) {
-    die1 = throwDie(die1);
-    die2 = throwDie(die2);
-    printResult(player1, die1, die2);
-
-    while (1) {
-        flag[0] = true;
-        turn = 1;
-        while (flag[1] && turn == 1) { /*do nothing, since other process is running*/ }
-        //Critical section -> give away dice
-        nextPlayer(player1); //Choose next player
-
-        flag[0] = false; //Process done
-        return;
-    }
-}
-
 int nextPlayer(int currentPlayer) {
     int numGen = chooseRandomPlayer(currentPlayer);
     //int numGen = ((rand() % 8) + 1);
