@@ -21,7 +21,9 @@
 
 void playing(int person1, person2, die1, die2, die3, die4);
 void printResult(int person, int die1, int die2);
-int nextPlayer(int currentPlayer, otherPlayer);
+
+int nextPlayer(int currentPlayer);
+
 int throwDie(int die);
 int chooseRandomPlayer (int player);
 
@@ -32,8 +34,15 @@ int main() {
     int numGen1 = chooseRandomPlayer(0); //Chooses first player A-H
     int numGen2 = chooseRandomPlayer(0); //Chooses second player
 
+    flag[0] = false;
+    flag[1] = false;
     //Starts playing
-    playing(numGen1, numGen2, die1, die2, die3, die4);
+    while (count1 < 5) {
+        process1(numGen1, die1, die2);
+        process2(numGen2, die3, die4);
+    }
+
+    //playing(numGen1, numGen2, die1, die2, die3, die4);
 
     /*for(int i = 0; i < 10; i++){
         die1 = ((rand() % 6) + 1);
@@ -42,7 +51,7 @@ int main() {
     }*/
 }
 
-void process1(int player1, int die1, int die2) {
+void diceGame(int player1, int die1, int die2) {
     die1 = throwDie(die1);
     die2 = throwDie(die2);
     printResult(player1, die1, die2);
@@ -59,31 +68,12 @@ void process1(int player1, int die1, int die2) {
     }
 }
 
-//Game2  - current player of this game is called player2
-void process2(int player2, int die3, int die4) {
-    die3 = throwDie(die3);
-    die4 = throwDie(die4);
-    printResult(player2, die3, die4);
-
-    while (1) {
-        flag[1] = true;
-        turn = 0;
-        while (flag[0] && turn == 0) { /*do nothing*/ }
-
-        //Critical section -> give away dice
-        nextPlayer(player2); //Choose next player
-
-        flag[1] = false;
-        break;
-    }
-}
-
 int nextPlayer (int currentPlayer){  //OBS! Vi har ikke taget højde for at otherPlayer ændrer sig mens nextPlayer() kører
     int numGen = chooseRandomPlayer(currentPlayer);
     while (1) {
-        if (numGen != currentPlayer && numGen != otherPlayer) {
-            turn = numGen;
-            return turn;
+        if (numGen != currentPlayer) {
+            printf("BLIVER JEG PRINTET!!! \n");
+            return numGen;
         } else {
             numGen = chooseRandomPlayer(currentPlayer);
             printf("PRINT ME!!! \n");
@@ -101,8 +91,7 @@ int throwDie (int die) {
     return die;
 }
 
-int count1= 0, count2= 0, count3= 0, count4= 0, count5= 0, count6 = 0, count7 = 0, count8 = 0; //Double sixes count to end game. One for each player
-void printResult (int person, int die1, int die2) {
+void printResult(int person, int die1, int die2) {
     switch (person) {
         case 1:
             if (die1 == die2 && die1 == 6) { // Double sixes instance
