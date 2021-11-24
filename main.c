@@ -25,7 +25,7 @@ int throwDie(int die);
 
 int chooseRandomPlayer(int player);
 
-int die1, die2, k;
+int die1, die2;
 int count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, count7 = 0, count8 = 0; //Double sixes count to end game. One for each player
 
 //Mutex lock
