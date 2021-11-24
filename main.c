@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include <pthread.h>
 
 /**
  * Oprettet 8 personer
@@ -19,25 +19,13 @@
  * @return
  */
 
-void playing(int person1, int person2, int die1, int die2, int die3, int die4);
-
-void process1(int player1, int die1, int die2);
-
-void process2(int player1, int die1, int die2);
-
+//void* diceGame(int player1);
 void printResult(int person, int die1, int die2);
-
 int nextPlayer(int currentPlayer);
-
 int throwDie(int die);
-
 int chooseRandomPlayer(int player);
 
-int turn;
-int die1;
-int die2;
-int die3;
-int die4;
+int die1, die2;
 int count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, count7 = 0, count8 = 0; //Double sixes count to end game. One for each player
 
 //Peterson's Algorithm for Two Processes
@@ -46,28 +34,33 @@ int turn;
 
 int main() {
     int numGen1 = chooseRandomPlayer(0); //Chooses first player A-H
-    int numGen2 = chooseRandomPlayer(0); //Chooses second player
+    int numGen2 = chooseRandomPlayer(0); //Chooses second player A-H
 
-    flag[0] = false;
-    flag[1] = false;
-    //Starts playing
-    while (count1 < 5) {
-        process1(numGen1, die1, die2);
-        process2(numGen2, die3, die4);
+
+    pthread_t game1, game2; //two thread structs created
+    pthread_mutex_init(&mutex, NULL); //Initialize mutex
+    if (pthread_create(&game1, NULL, &diceGame, NULL)) { //Create thread 1 for diceGame process
+        return 1;
     }
 
-    //playing(numGen1, numGen2, die1, die2, die3, die4);
+    if (pthread_create(&game2, NULL, &diceGame, NULL)) { //Create thread 2 for diceGame process
+        return 2;
+    }
 
-    /*for(int i = 0; i < 10; i++){
-        die1 = ((rand() % 6) + 1);
-        die2 = ((rand() % 6) + 1);
-        printf("Die 1 = %d and Die 2 = %d \n", die1, die2);
-    }*/
+    if (pthread_join(game1, NULL)) { //First thread returns
+        return 3;
+    }
+
+    if (pthread_join(game2, NULL)) { //Second thread returns
+        return 4;
+    }
+
+    pthread_mutex_destroy(&mutex); //Destroy mutex
 }
 
 int nextPlayer(int currentPlayer) {
     int numGen = chooseRandomPlayer(currentPlayer);
-    //int numGen = ((rand() % 8) + 1);
+
     while (1) {
         if (numGen != currentPlayer) {
             printf("BLIVER JEG PRINTET!!! \n");
