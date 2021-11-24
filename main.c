@@ -18,8 +18,11 @@
 
 //void* diceGame(int player1);
 void printResult(int person, int die1, int die2);
+
 int nextPlayer(int currentPlayer);
+
 int throwDie(int die);
+
 int chooseRandomPlayer(int player);
 
 int die1, die2;
@@ -28,7 +31,8 @@ int count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, coun
 //Mutex lock
 pthread_mutex_t mutex;
 int player = 0;
-void* diceGame() {
+
+void *diceGame() {
     if (!player) {
         player = chooseRandomPlayer(0); //Chooses first player A-H
     }
@@ -47,22 +51,22 @@ int main() {
     pthread_t game1, game2; //two thread structs created
     pthread_mutex_init(&mutex, NULL); //Initialize mutex
 
-    while (count1 < 4) {
-        if (pthread_create(&game1, NULL, &diceGame, NULL)) { //Create thread 1 for diceGame process
-                return 1;
-            }
+    while (count1 < 5) {
+        if (pthread_create(&game1, NULL, &diceGame, NULL)) {//Create thread 1 for diceGame process
+            return 1;
+        }
 
-            if (pthread_create(&game2, NULL, &diceGame, NULL)) { //Create thread 2 for diceGame process
-                return 2;
-            }
+        if (pthread_create(&game2, NULL, &diceGame, NULL)) { //Create thread 2 for diceGame process
+            return 2;
+        }
 
-            if (pthread_join(game1, NULL)) { //First thread returns
-                return 3;
-            }
+        if (pthread_join(game1, NULL)) { //First thread returns
+            return 3;
+        }
 
-            if (pthread_join(game2, NULL)) { //Second thread returns
-                return 4;
-            }
+        if (pthread_join(game2, NULL)) { //Second thread returns
+            return 4;
+        }
     }
     pthread_mutex_destroy(&mutex); //Destroy mutex
 }
