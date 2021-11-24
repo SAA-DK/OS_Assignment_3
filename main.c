@@ -39,11 +39,12 @@ void* diceGame() {
     die2 = throwDie(die2);
     printResult(player, die1, die2);
 
-    //Mutex lock before choosing next player from the shared memory pool
-    pthread_mutex_lock(&mutex);
-    //Critical section -> give away dice
-    nextPlayer(player); //Choose next player
-    pthread_mutex_unlock(&mutex);
+        //Mutex lock before choosing next player from the shared memory pool
+        pthread_mutex_lock(&mutex);
+        //Critical section -> give away dice
+        player = nextPlayer(player); //Choose next player
+        pthread_mutex_unlock(&mutex);
+    }
 }
 
 int main() {
