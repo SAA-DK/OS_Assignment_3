@@ -18,4 +18,5 @@ https://www.javatpoint.com/starvation-and-aging-in-operating-systems
 
 https://www.javatpoint.com/os-deadlocks-introduction
 
+https://tutorialspoint.dev/computer-science/operating-systems/starvation-aging-operating-systems
 
