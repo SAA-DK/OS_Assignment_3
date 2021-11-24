@@ -3,18 +3,15 @@
 #include <pthread.h>
 
 /**
- * Oprettet 8 personer
- * Oprettet 4 individuelle terninger, størrelsen er underordnet
- * En person skal bruge et sæt terninger, 2 terninger, for at kunne slå.
- * En person må kun holde ét sæt terninger ad gangen.
- * Når en person har slået, gives terningerne videre til en tilfældig person.
- * En person må ikke slå 2 gange i træk, med det samme sæt terninger.
- * Spillet slutter når en person har slået dobbeltsekser tre gange.
- * Ved tilfælde af en deadlock, hvor terningerne bliver splittet op, så der sidder mere en to personer med terninger, er det en fejl, og spillet starter forfra.
- * Det sæt terninger man lige har slået med, kan ikke komme tilbage til en selv, før at mindst en anden person har slået med sættet.
- *
+ * Til spillet er der 8 spillere
+ * Der er 4 individuelle terninger, i dette spil har de seks sider
+ * En person skal bruge et sæt terninger, 2 terninger, for at kunne slå
+ * En person må kun holde ét sæt terninger ad gangen
+ * Når en person har slået, gives terningerne videre til en tilfældig person
+ * En person må ikke slå 2 gange i træk, med det samme sæt terninger
+ * Spillet slutter når en person har slået dobbeltsekser tre gange
  * Hvis begge sæt terninger bliver givet til den samme person, må den ene person der prøver at give sine terninger væk blive siddende med dem, indtil
- * den person terningerne skal gives til, er færdige med at slå med det andet sæt terninger, og har givet sættet videre: Spinlock
+ * den person terningerne skal gives til, er færdig med at slå med det andet sæt terninger og har givet sættet videre: Spinlock
  *
  * @return
  */
@@ -39,12 +36,11 @@ void* diceGame() {
     die2 = throwDie(die2);
     printResult(player, die1, die2);
 
-        //Mutex lock before choosing next player from the shared memory pool
-        pthread_mutex_lock(&mutex);
-        //Critical section -> give away dice
-        player = nextPlayer(player); //Choose next player
-        pthread_mutex_unlock(&mutex);
-    }
+    //Mutex lock before choosing next player and using dice from the shared memory pool
+    pthread_mutex_lock(&mutex);
+    //Critical section -> give away dice
+    player = nextPlayer(player); //Choose next player
+    pthread_mutex_unlock(&mutex);
 }
 
 int main() {
@@ -68,8 +64,6 @@ int main() {
                 return 4;
             }
     }
-
-
     pthread_mutex_destroy(&mutex); //Destroy mutex
 }
 
@@ -78,11 +72,9 @@ int nextPlayer(int currentPlayer) {
 
     while (1) {
         if (numGen != currentPlayer) {
-            printf("BLIVER JEG PRINTET!!! \n");
             return numGen;
         } else {
-            numGen = chooseRandomPlayer(currentPlayer);
-            printf("PRINT ME!!! \n");
+            numGen = chooseRandomPlayer(0);
         }
     }
 }
