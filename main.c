@@ -28,9 +28,20 @@ int chooseRandomPlayer(int player);
 int die1, die2;
 int count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, count7 = 0, count8 = 0; //Double sixes count to end game. One for each player
 
-//Peterson's Algorithm for Two Processes
-bool flag[2];
-int turn;
+//Mutex lock
+pthread_mutex_t mutex;
+
+void* diceGame(int player1) {
+    die1 = throwDie(die1);
+    die2 = throwDie(die2);
+    printResult(player1, die1, die2);
+
+    //Mutex lock before choosing next player from the shared memory pool
+    pthread_mutex_lock(&mutex);
+    //Critical section -> give away dice
+    nextPlayer(player1); //Choose next player
+    pthread_mutex_unlock(&mutex);
+}
 
 int main() {
     int numGen1 = chooseRandomPlayer(0); //Chooses first player A-H
